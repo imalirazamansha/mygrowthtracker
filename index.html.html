@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Growth Flow Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text: #f8fafc;
+        }
+
+        .theme-ocean { --primary: #0ea5e9; --secondary: #2dd4bf; --bg: #060b19; }
+        .theme-sunset { --primary: #f43f5e; --secondary: #fbbf24; --bg: #1a0b08; }
+        .theme-mystic { --primary: #8e2de2; --secondary: #4a00e0; --bg: #0d061a; }
+        .theme-cyber { --primary: #ff00ff; --secondary: #00ffff; --bg: #050505; }
+
+        body { 
+            font-family: 'Poppins', sans-serif; background: var(--bg);
+            color: var(--text); margin: 0; padding: 10px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; transition: 0.5s;
+            background-attachment: fixed;
+        }
+
+        .app-container { 
+            width: 100%; max-width: 450px; background: var(--card-bg); 
+            backdrop-filter: blur(20px); border-radius: 30px; padding: 20px; 
+            box-sizing: border-box; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .theme-picker { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .color-dot { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        .tabs { display: flex; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 5px; margin-bottom: 20px; }
+        .tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; border-radius: 12px; font-weight: bold; transition: 0.3s; color: #94a3b8; font-size: 14px; }
+        .tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+
+        .input-card { 
+            background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 15px; 
+            margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .icon-3d { font-size: 28px; margin-bottom: 8px; display: inline-block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+        label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; }
+
+        .namaz-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; }
+        .namaz-btn { 
+            background: rgba(255,255,255,0.07); border-radius: 8px; padding: 12px 0; 
+            text-align: center; cursor: pointer; font-size: 8px; font-weight: bold; transition: 0.2s;
+        }
+        .namaz-btn.selected { background: linear-gradient(135deg, #10b981, #059669); color: white; transform: scale(0.95); }
+
+        input[type="number"] { 
+            width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.1);
+            color: white; font-size: 18px; padding: 8px 0; outline: none;
+        }
+
+        .save-btn { 
+            width: 100%; padding: 16px; border-radius: 15px; border: none; 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 10px;
+        }
+
+        .history-card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="theme-ocean">
+
+<div class="app-container">
+    <h2 style="text-align:center; font-size: 20px; letter-spacing: 2px; margin: 10px 0 20px 0;">GROWTH FLOW</h2>
+
+    <div class="theme-picker">
+        <div class="color-dot" style="background: linear-gradient(135deg, #0ea5e9, #2dd4bf)" onclick="setTheme('theme-ocean')"></div>
+        <div class="color-dot" style="background: linear-gradient(135deg, #f43f5e, #fbbf24)" onclick="setTheme('theme-sunset')"></div>
+        <div class="color-dot" style="background: linear-gradient(135deg, #8e2de2, #4a00e0)" onclick="setTheme('theme-mystic')"></div>
+        <div class="color-dot" style="background: linear-gradient(135deg, #ff00ff, #00ffff)" onclick="setTheme('theme-cyber')"></div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('today')">TODAY</div>
+        <div class="tab" onclick="showTab('history')">HISTORY</div>
+    </div>
+
+    <div id="today-section">
+        <div class="input-card">
+            <span class="icon-3d">🕌</span> <label>Prayers</label>
+            <div class="namaz-grid">
+                <div class="namaz-btn" onclick="this.classList.toggle('selected')">FAJR</div>
+                <div class="namaz-btn" onclick="this.classList.toggle('selected')">ZHUHR</div>
+                <div class="namaz-btn" onclick="this.classList.toggle('selected')">ASR</div>
+                <div class="namaz-btn" onclick="this.classList.toggle('selected')">MAGHRIB</div>
+                <div class="namaz-btn" onclick="this.classList.toggle('selected')">ISHA</div>
+            </div>
+        </div>
+
+        <div class="input-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div><span class="icon-3d">🏋️</span> <label>Exercise</label></div>
+            <input type="checkbox" id="ex" style="width:25px; height:25px;">
+        </div>
+
+        <div class="input-card">
+            <span class="icon-3d">📚</span> <label>Books (Pages)</label>
+            <input type="number" id="bk" placeholder="0">
+        </div>
+
+        <div class="input-card">
+            <span class="icon-3d">🌙</span> <label>Sleep (Hours)</label>
+            <input type="number" id="sl" placeholder="0">
+        </div>
+
+        <div class="input-card">
+            <span class="icon-3d">📱</span> <label>Scrolling (Mins)</label>
+            <input type="number" id="sc" placeholder="0">
+        </div>
+
+        <div class="input-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div><span class="icon-3d">🚭</span> <label>Quit Nicotine</label></div>
+            <input type="checkbox" id="ni" style="width:25px; height:25px;">
+        </div>
+
+        <button class="save-btn" onclick="saveData()">SAVE PROGRESS</button>
+    </div>
+
+    <div id="history-section" class="hidden">
+        <div id="history-list"></div>
+    </div>
+</div>
+
+<script>
+    const todayStr = new Date().toLocaleDateString();
+
+    window.onload = () => {
+        if(localStorage.getItem('currentDate') !== todayStr) {
+            resetInputs();
+            localStorage.setItem('currentDate', todayStr);
+        }
+    };
+
+    function setTheme(t) { document.body.className = t; }
+
+    function showTab(t) {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        if(t === 'today') {
+            document.getElementById('today-section').classList.remove('hidden');
+            document.getElementById('history-section').classList.add('hidden');
+            document.querySelectorAll('.tab')[0].classList.add('active');
+        } else {
+            document.getElementById('today-section').classList.add('hidden');
+            document.getElementById('history-section').classList.remove('hidden');
+            document.querySelectorAll('.tab')[1].classList.add('active');
+            displayHistory();
+        }
+    }
+
+    function resetInputs() {
+        document.querySelectorAll('.namaz-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('ex').checked = false;
+        document.getElementById('ni').checked = false;
+        document.getElementById('bk').value = '';
+        document.getElementById('sl').value = '';
+        document.getElementById('sc').value = '';
+    }
+
+    function saveData() {
+        const namazCount = document.querySelectorAll('.namaz-btn.selected').length;
+        const entry = {
+            date: todayStr, namaz: namazCount,
+            ex: document.getElementById('ex').checked,
+            bk: document.getElementById('bk').value || 0,
+            sl: document.getElementById('sl').value || 0,
+            sc: document.getElementById('sc').value || 0,
+            ni: document.getElementById('ni').checked
+        };
+        let db = JSON.parse(localStorage.getItem('finalTracker')) || [];
+        const idx = db.findIndex(i => i.date === todayStr);
+        if(idx !== -1) db[idx] = entry; else db.unshift(entry);
+        localStorage.setItem('finalTracker', JSON.stringify(db));
+        alert("Progress Saved! 🚀");
+    }
+
+    function displayHistory() {
+        const list = document.getElementById('history-list');
+        const db = JSON.parse(localStorage.getItem('finalTracker')) || [];
+        list.innerHTML = db.map(i => `
+            <div class="history-card">
+                <div style="font-weight:bold; color:var(--primary); font-size:14px;">${i.date}</div>
+                <div style="margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:11px; opacity:0.8;">
+                    <div>🕌 Namaz: ${i.namaz}/5</div>
+                    <div>🏋️ Exercise: ${i.ex?'Yes':'No'}</div>
+                    <div>📚 Books: ${i.bk}pg</div>
+                    <div>🌙 Sleep: ${i.sl}hr</div>
+                    <div>📱 Scroll: ${i.sc}m</div>
+                    <div>🚭 Nicotine: ${i.ni?'✓':'✗'}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+</script>
+</body>
+</html>
